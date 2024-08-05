@@ -1,10 +1,9 @@
-export const user = {
-  email: 'selene.funes@applydigital.com',
+export const userData = {
   firstName: 'Selene',
   lastName: 'Funes',
-  phone: '55555555',
-  rut: '555',
-  birthday: '18/10',
+  phone: '555555555',
+  rut: '154101799',
+  birthday: '1810',
   password: 'testPassword1',
   confirmPassword: 'testPassword1'
 };

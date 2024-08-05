@@ -1,5 +1,6 @@
 
 import { homePageSelectors, registerOverlaySelectors } from '../../config/selectors';
+import { generateRandomEmail } from '../../support/utils';
 
 class HomePage {
   visit() {
@@ -7,51 +8,151 @@ class HomePage {
   }
 
   clickLoginPortal() {
-    cy.get(homePageSelectors.accountLogInButton).click();
+    cy.get(homePageSelectors.accountLoginButton).click();
   }
 
   clickRegister() {
-    cy.get(homePageSelectors.registerButton).click();
+    cy.get(homePageSelectors.registerButton).eq(0).click();
   }
 
-  fillEmail(email) {
-    cy.get(registerOverlaySelectors.emailInput).type(email);
+  handleToaster1() {
+    cy.get(homePageSelectors.toaster1, { timeout: 10000 })
+      .should('be.visible');
+    
+    cy.get(homePageSelectors.declineButton1)
+      .click();
+
+    cy.get(homePageSelectors.toaster1, { timeout: 10000 })
+      .should('not.exist');
   }
 
+  handleToaster2() {
+    cy.get(homePageSelectors.toaster2, { timeout: 10000 })
+     .should('be.visible');
+    
+    cy.get(homePageSelectors.declineButton2)
+      .click();
+
+    cy.get(homePageSelectors.toaster2, { timeout: 10000 })
+      .should('not.exist');
+  }
+
+  handleCookieBanner(){
+    cy.get(homePageSelectors.acceptCookiesButton)
+    .click();
+  }
+
+  fillEmail() {
+    const email = generateRandomEmail();
+
+    cy.get(registerOverlaySelectors.emailInput, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .focus()
+      .then(() => {
+        cy.get(registerOverlaySelectors.emailInput, { timeout: 1000 })
+        .invoke('val', email)
+        .trigger('input')
+        cy.get(registerOverlaySelectors.emailInput, { timeout: 1000 }).should('have.value', email);
+      });
+  }
+  
   fillFirstName(firstName) {
-    cy.get(registerOverlaySelectors.firstNameInput).type(firstName);
-  }
+    cy.get(registerOverlaySelectors.firstNameInput, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .focus()
+      .then(() => {
+        cy.get(registerOverlaySelectors.firstNameInput, { timeout: 1000 })
+          .invoke('val', firstName)
+          .trigger('input') 
+      });
+    }
 
   fillLastName(lastName) {
-    cy.get(registerOverlaySelectors.lastNameInput).type(lastName);
-  }
-
+    cy.intercept('POST', 'https://api.us1.exponea.com/bulk', {
+      statusCode: 200,
+      body: {} 
+    }).as('exponeaRequest');
+    cy.get(registerOverlaySelectors.lastNameInput, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .focus()
+      .then(() => {
+        cy.get(registerOverlaySelectors.lastNameInput, { timeout: 10000 })
+          .invoke('val', lastName)
+          .trigger('input')
+      });
+}
+  
   fillPhone(phone) {
-    cy.get(registerOverlaySelectors.phoneInput).type(phone);
-  }
-
+    cy.get(registerOverlaySelectors.phoneInput, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .scrollIntoView()
+      .then(() => {
+        cy.get(registerOverlaySelectors.phoneInput, { timeout: 1000 })
+          .invoke('val', phone)
+          .trigger('input') 
+        cy.get(registerOverlaySelectors.phoneInput, { timeout: 1000 })
+          .should('have.value', phone);
+        cy.intercept('POST', 'https://www.google-analytics.com/j/collect*', (req) => {
+            req.reply({ statusCode: 200, body: {} });
+          }).as('gaRequest');
+        cy.intercept('POST', 'https://www.clarity.ms/eus2-d-sc/collect', {
+            statusCode: 200,
+            body: {}
+        }).as('apiRequest');
+      });
+    }
+  
   fillRut(rut) {
-    cy.get(registerOverlaySelectors.rutInput).type(rut);
+    cy.get(registerOverlaySelectors.rutInput, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .scrollIntoView()
+      .focus()
+      .then(() => {
+        cy.get(registerOverlaySelectors.rutInput, { timeout: 1000 })
+          .invoke('val', rut)
+          .trigger('input')
+      });
   }
-
-  fillBirthday(birthday) {
-    cy.get(registerOverlaySelectors.birthdayInput).type(birthday);
-  }
-
+  
   fillPassword(password) {
-    cy.get(registerOverlaySelectors.passwordInput).type(password);
+    cy.get(registerOverlaySelectors.passwordInput, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .scrollIntoView()
+      .then(() => {
+        cy.get(registerOverlaySelectors.passwordInput, { timeout: 1000 })
+          .type(password)
+      });
   }
-
+  
   fillConfirmPassword(confirmPassword) {
-    cy.get(registerOverlaySelectors.confirmPasswordInput).type(confirmPassword);
+    cy.get(registerOverlaySelectors.confirmPasswordInput, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .scrollIntoView()
+      .then(() => {
+        cy.get(registerOverlaySelectors.confirmPasswordInput, { timeout: 1000 })
+          .type(confirmPassword)
+      });
   }
-
+  
   acceptTermsAndConditions() {
-    cy.get(registerOverlaySelectors.termsAndConditionsCheckbox).check();
+    cy.get(registerOverlaySelectors.termsAndConditionsCheckbox, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .check(); 
   }
-
+  
   clickRegisterHereButton() {
-    cy.get(registerOverlaySelectors.registerHereButton).click();
+    cy.get(registerOverlaySelectors.registerHereButton, { timeout: 10000 })
+      .should('be.visible')
+      .and('not.be.disabled')
+      .click(); 
   }
 
   registerUser(user) {
@@ -60,11 +161,17 @@ class HomePage {
     this.fillLastName(user.lastName);
     this.fillPhone(user.phone);
     this.fillRut(user.rut);
-    this.fillBirthday(user.birthday);
     this.fillPassword(user.password);
     this.fillConfirmPassword(user.confirmPassword);
     this.acceptTermsAndConditions();
     this.clickRegisterHereButton();
+  }
+
+  logIn(user) {
+    cy.get(homePageSelectors.accountLoginButton).click();
+    cy.get(registerOverlaySelectors.emailInput).type(email);
+    cy.get(registerOverlaySelectors.passwordInput).type(user.password);
+    cy.get(homePageSelectors.loginButton).click();
   }
 }
 
