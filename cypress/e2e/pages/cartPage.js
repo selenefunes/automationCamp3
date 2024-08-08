@@ -2,11 +2,9 @@ import { homePageSelectors, registerOverlaySelectors } from '../../config/select
 import { generateRandomEmail } from '../../support/utils';
 
 class CartPage {
-
-  visit(){
-    
-  }
   goToCart(){
+    cy.get(homePageSelectors.cartButton)
+      .click();
     cy.get('button')
       .contains('Agregar dirección')
       .click();

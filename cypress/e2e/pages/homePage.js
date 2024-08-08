@@ -1,6 +1,6 @@
 
 import { homePageSelectors, registerOverlaySelectors } from '../../config/selectors';
-import { generateRandomEmail } from '../../support/utils';
+import { userData } from '../../fixtures/userData';
 
 class HomePage {
   visit() {
@@ -18,10 +18,8 @@ class HomePage {
   handleToaster1() {
     cy.get(homePageSelectors.toaster1, { timeout: 10000 })
       .should('be.visible');
-    
     cy.get(homePageSelectors.declineButton1)
       .click();
-
     cy.get(homePageSelectors.toaster1, { timeout: 10000 })
       .should('not.exist');
   }
@@ -29,10 +27,10 @@ class HomePage {
   handleToaster2() {
     cy.get(homePageSelectors.toaster2, { timeout: 10000 })
      .should('be.visible');
-    
-    cy.get(homePageSelectors.declineButton2)
-      .click();
-
+    cy.get(homePageSelectors.declineButton2, { timeout: 10000 })
+    .each(($el) => {
+      cy.wrap($el).click();
+    });
     cy.get(homePageSelectors.toaster2, { timeout: 10000 })
       .should('not.exist');
   }
@@ -42,8 +40,17 @@ class HomePage {
     .click();
   }
 
+  handleToaster3(){
+    cy.get(homePageSelectors.toaster3, { timeout: 10000 })
+      .should('be.visible');
+    cy.get(homePageSelectors.declineButton3)
+      .click();
+    cy.get(homePageSelectors.toaster3, { timeout: 10000 })
+      .should('not.exist')
+  }
+
   fillEmail() {
-    const email = generateRandomEmail();
+    const email = Cypress.env('randomEmail');
 
     cy.get(registerOverlaySelectors.emailInput, { timeout: 10000 })
       .should('be.visible')
@@ -51,8 +58,7 @@ class HomePage {
       .focus()
       .then(() => {
         cy.get(registerOverlaySelectors.emailInput, { timeout: 1000 })
-        .invoke('val', email)
-        .trigger('input')
+        .type(email)
         cy.get(registerOverlaySelectors.emailInput, { timeout: 1000 }).should('have.value', email);
       });
   }
@@ -64,8 +70,7 @@ class HomePage {
       .focus()
       .then(() => {
         cy.get(registerOverlaySelectors.firstNameInput, { timeout: 1000 })
-          .invoke('val', firstName)
-          .trigger('input') 
+          .type(firstName)
       });
     }
 
@@ -114,8 +119,7 @@ class HomePage {
       .focus()
       .then(() => {
         cy.get(registerOverlaySelectors.rutInput, { timeout: 1000 })
-          .invoke('val', rut)
-          .trigger('input')
+          .type(rut)
       });
   }
   
@@ -167,10 +171,12 @@ class HomePage {
     this.clickRegisterHereButton();
   }
 
-  logIn(user) {
+  logIn(userData) {
+    const email = 'selene.funes@applydigital.com';
+
     cy.get(homePageSelectors.accountLoginButton).click();
     cy.get(registerOverlaySelectors.emailInput).type(email);
-    cy.get(registerOverlaySelectors.passwordInput).type(user.password);
+    cy.get(registerOverlaySelectors.passwordInput).type(userData.password);
     cy.get(homePageSelectors.loginButton).click();
   }
 }

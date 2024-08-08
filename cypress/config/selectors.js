@@ -1,8 +1,8 @@
 
 export const homePageSelectors = {
   accountLoginButton:'.Button_root__mZAHs.Button_link__DdCCk.btn-link.UserNav_avatarButton__Zw5Lk',
-  loginButton:'.Button_root__mZAHs Button_slim__lsE8n btn-slim',
-  googleButton:'.LgbsSe-Bz112c',
+  loginButton:'.Button_root__mZAHs.Button_slim__lsE8n.btn-slim',
+  cartButton: '.UserNav_bag-btn__YC0rs',
   registerButton: '.Auth_signup-link__fxslF.signup-link',
   toaster1: '.weblayer--box-web-push-subscription',
   declineButton1: '.weblayer--box-web-push-subscription .decline-button',
@@ -10,6 +10,8 @@ export const homePageSelectors = {
   declineButton2: 'span.exponea-close',
   cookiesToaster: '.FeatureBar_root__oNfaI.transform.opacity-100.z-30',
   acceptCookiesButton: '.Button_root__mZAHs.mx-5',
+  toaster3: '.weblayer--box-notification.vertical-bottom.horizontal-right.enter-slide-right',
+  declineButton3: '.close',
   menuButton: '.Navbar_nav-container-inner__SAqO_ > .Navbar_megamenu-cms__cBjN3 > .DesktopMegamenu_desktop-megamenu__SwitM > .top-2',
   espaciosMenu: '.Navbar_nav-container-inner__SAqO_ > .Navbar_megamenu-cms__cBjN3 > .MobileMegaMenu_megamenu-cms-mobile__XaOq_ > .MobileMegaMenu_megamenu-main-menu-wrap__YnVnS > .MobileMegaMenu_mobile-categories__unxpJ > :nth-child(1) > span > p',
   category: ':nth-child(2) > .columnGroup_root__UEATy > :nth-child(2) > .text_root__36_4Q > h5 > a > span',
@@ -32,4 +34,7 @@ export const registerOverlaySelectors = {
 export const productFlowSelectors = {
   searchBar: '.Navbar_mobile-search-icon__BfW6v > .flex > .Searchbar_searchbar-main__mcbXv > #mobile-search',
   cartButton: '.UserNav_bag-btn__YC0rs',
+  addToFavoritesButton: 'Button_root__mZAHs.Button_link__DdCCk.btn-link',
+  favoritesButton: 'button[aria-label="Tus favoritos"]',
+  addToCartButton: 'button[aria-label="Add to Cart"]',
 }

@@ -1,5 +1,4 @@
 import { homePageSelectors, productFlowSelectors } from '../../config/selectors';
-import { generateRandomEmail } from '../../support/utils';
 
 class ProductSelectionPage {
     selectCategoryandSubcategory () {
@@ -20,6 +19,7 @@ class ProductSelectionPage {
 
     verifyProductPrice(){
       cy.contains('Set de sábanas estampadas 144 hilos 1.5 plazas')
+        .scrollIntoView()
         .should('be.visible');
       cy.contains('$18.990')
         .first()
@@ -27,35 +27,36 @@ class ProductSelectionPage {
     }
 
     selectNewProductAndAddToFavorite(){
+
       cy.get(productFlowSelectors.searchBar)
         .should('be.visible')
         .type('toalla', { force: true });
       cy.contains('h6', 'Toalla Microfibra Deporte')
+        .scrollIntoView()
         .click();
-      cy.get('button')
-        .contains('Agregar a favoritos')
-        .click();
-      //cy.get('#email').type('selene.funes@applydigital.com');
-      //cy.get('#password').type('testPassword1');
-      //cy.contains('button', 'Ingresar').click();
-      //cy.wait(10000);
+      cy.get('.weblayer--box-notification.vertical-bottom.horizontal-right.enter-slide-right')
+        .should('be.visible')
+      cy.get(homePageSelectors.declineButton3)
+        .click( {multiple: true})
+      cy.get(productFlowSelectors.addToFavoritesButton)
+        .click({force: true});
       cy.get(productFlowSelectors.cartButton)
         .click();
-      cy.contains('button', 'Tus favoritos')
+      cy.get(productFlowSelectors.favoritesButton)
         .click();
       cy.contains('h2', 'Toalla Microfibra Deporte')
         .should('be.visible');
     }
 
     selectNewProductandAddtoCart(){
-      cy.get()
+      cy.get(productFlowSelectors.searchBar)
         .should('be.visible')
         .type('toalla', { force: true });
       cy.contains('h6', 'Toalla algodón sábana 90x180cm')
         .click();
-      cy.contains('button', 'Agregar al carro')
+      cy.get(productFlowSelectors.addToCartButton)
         .click();
-      cy.get('.UserNav_bag-btn__YC0rs')
+      cy.get(homePageSelectors.cartButton)
         .click();
       cy.contains('.CartItem_cart-item-main-wrapper__E7ciX', 'Toalla algodón sábana 90x180cm')
         .within(() => {
